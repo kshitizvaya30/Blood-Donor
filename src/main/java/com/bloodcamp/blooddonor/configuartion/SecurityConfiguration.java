@@ -38,17 +38,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.mp4", "/**/*.html", "/**/*.css", "/**/*.js").permitAll()
                 .antMatchers("/api/authenticate").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/recipients").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/donors").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/recipients").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET,"/api/donors").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/recipients").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/donors").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/recipients").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/donors").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and().exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtRequestFilter , UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
